@@ -29,7 +29,7 @@
     "url": "git://github.com/stream99/z.git"
   },
   "scripts": {
-    "build": "mkdir -p static && cp -r videos static/ && npm run build-css && npm run build-js",
+    "build": "sh build.sh",
     "build-css": "stylus -u nib css/main.styl -o static/ -c",
     "build-js": "browserify client | uglifyjs -c warnings=false -m > static/bundle.js",
     "start": "node server",

@@ -1,0 +1,19 @@
+extends layout
+
+block body
+  //
+    #playerI1bb47Zv
+    script.
+      jwplayer('playerI1bb47Zv').setup({
+        playlist: '//content.jwplatform.com/feed/I1bb47Zv.rss',
+        width: '100%',
+        aspectratio: '16:9',
+        controls: 'false',
+        autostart: 'true'
+      });
+  video(width="320", height="240", controls)
+    source(src="http://walterebert.com/playground/video/hls/sintel-trailer.m3u8")
+    |Your browser does not support the video tag.
+  footer
+    p Hi
+    p: by ZX.

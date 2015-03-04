@@ -24,7 +24,7 @@ app.use(compress())
 
 app.use(function (req, res, next) {
   // Force SSL
-  if (config.isProd && req.protocol !== 'https')
+  if (config.forceSSL && config.isProd && req.protocol !== 'https')
     return res.redirect('https://' + (req.hostname || 'instant.io') + req.url)
 
   // Redirect www to non-www

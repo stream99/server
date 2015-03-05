@@ -9,7 +9,8 @@
     "express": "^4.8.5",
     "node-static": "^0.7.6",
     "jade": "^1.5.0",
-    "run-parallel": "^1.0.0"
+    "run-parallel": "^1.0.0",
+    "mongoose": "^3.8.24"
   },
   "devDependencies": {
     "browserify": "^8.0.2",

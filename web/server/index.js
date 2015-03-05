@@ -8,11 +8,13 @@ var jade = require('jade')
 var parallel = require('run-parallel')
 var path = require('path')
 var url = require('url')
-
+var mongoose = require('mongoose');
+var streamHandlers = require('./handlers/stream_handlers.js')
 var config = require('../config')
 
 var app = express()
 var httpServer = http.createServer(app)
+
 
 // Templating
 app.set('views', __dirname + '/views')
@@ -58,6 +60,13 @@ app.use(function (req, res, next) {
   next()
 })
 
+// Make our db accessible to our router
+mongoose.connect('mongodb://localhost/test');
+app.use(function(req, res, next){
+  req.mongoose = mongoose;
+  next();
+});
+
 app.use(express.static(path.join(__dirname, '../static')))
 
 app.get('/', function (req, res) {
@@ -67,6 +76,8 @@ app.get('/', function (req, res) {
 app.get('*', function (req, res) {
   res.status(404).render('error', { message: '404 Not Found' })
 })
+
+app.post('/streams/create', streamHandlers.createStream)
 
 // error handling middleware
 app.use(function (err, req, res, next) {

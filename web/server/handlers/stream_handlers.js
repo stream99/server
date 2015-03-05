@@ -17,10 +17,20 @@ function createStream(req, res) {
       console.log("Error saving stream.")
     }
   });
-  res.send({
+  res.json({
     status: 'SUCCESS',
     streamID: streamID
   })
 }
 
 exports.createStream = createStream
+
+function uploadVideo(req, res) {
+  console.log(req.files)
+  res.json({
+    streamID: req.params.id,
+    timestamp: req.params.timestamp
+  })
+}
+
+exports.uploadVideo = uploadVideo

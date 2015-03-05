@@ -8,7 +8,8 @@ var jade = require('jade')
 var parallel = require('run-parallel')
 var path = require('path')
 var url = require('url')
-var mongoose = require('mongoose');
+var mongoose = require('mongoose')
+var multer = require('multer')
 var streamHandlers = require('./handlers/stream_handlers.js')
 var config = require('../config')
 
@@ -78,6 +79,23 @@ app.get('*', function (req, res) {
 })
 
 app.post('/streams/create', streamHandlers.createStream)
+
+app.use(multer({
+  dest: './uploads/',
+  onFileUploadStart: function(file, req, res) {
+    console.log("start upload file: ", file)
+  },
+  onFileUploadData: function(file, data, req, res) {
+    console.log("got data for file: %s with length: %d ", file, data.length)
+  },
+  onFileUploadComplete: function(file, req, res) {
+    console.log("upload complete: ", file)
+  }
+
+  // TODO: add upload limits
+}))
+
+app.post('/streams/:id([0-9a-z]+)/upload/:timestamp([0-9]+)', streamHandlers.uploadVideo)
 
 // error handling middleware
 app.use(function (err, req, res, next) {

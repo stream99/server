@@ -1,6 +1,8 @@
 var mongoose = require('mongoose');
+var sprintf = require('sprintf-js').sprintf;
 
 utils = require('../utils/utils.js')
+transcode = require('../transcode.js')
 
 // TODO: mongoose connection 
 var Stream = mongoose.model('Stream', {
@@ -27,6 +29,8 @@ exports.createStream = createStream
 
 function uploadVideo(req, res) {
   console.log(req.files)
+  file = req.files.upload
+  transcode.transcode(file.path, sprintf("streams/%s/%s.m3u8", req.params.id, file.name.slice(0, -4)))
   res.json({
     streamID: req.params.id,
     timestamp: req.params.timestamp

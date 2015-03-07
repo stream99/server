@@ -2,10 +2,11 @@ var mongoose = require('mongoose');
 var sprintf = require('sprintf-js').sprintf;
 
 utils = require('../utils/utils.js')
-transcode = require('../transcode.js')
+
+var allStreams = {};
 
 // TODO: mongoose connection 
-var Stream = mongoose.model('Stream', {
+var StreamModel = mongoose.model('Stream', {
   ID: {type: [String], index: true },
   creator: String
 });
@@ -13,8 +14,8 @@ var Stream = mongoose.model('Stream', {
 function createStream(req, res) {
   // TODO: consider auto increament ID.
   var streamID = utils.randomStreamID(6)
-  var stream = new Stream({ ID: streamID });
-  stream.save(function (err) {
+  var streamModel = new StreamModel({ ID: streamID });
+  streamModel.save(function (err) {
     if (err) {
       console.log("Error saving stream.")
     }
@@ -27,10 +28,19 @@ function createStream(req, res) {
 
 exports.createStream = createStream
 
+// TODO: remove following block
+var Stream = require('../stream.js').Stream;
+var options = {
+  dir: 'videos/',
+  playlist: 'stream1',
+  bufferSize: 10
+};
+var stream = new Stream(options);
+
 function uploadVideo(req, res) {
-  console.log(req.files)
-  file = req.files.upload
-  transcode.transcode(file.path, sprintf("streams/%s/%s.m3u8", req.params.id, file.name.slice(0, -4)))
+  console.log(req.files);
+  file = req.files.upload;
+  stream.append(file.path, req.params.timestamp);
   res.json({
     streamID: req.params.id,
     timestamp: req.params.timestamp

@@ -3,10 +3,13 @@ var fs = require('fs');
 var path = require('path');
 var exec = require('child_process').exec;
 
+
+TARGET_DURATION = 5
+
 HEADER = 
 '#EXTM3U\n' +
 '#EXT-X-VERSION:3\n' +
-'#EXT-X-TARGETDURATION:5\n';
+'#EXT-X-TARGETDURATION:' + TARGET_DURATION + '\n';
 
 // The Stream object maintains a m3u8 playlist as new videos are appended to achieve live content streaming.
 //
@@ -21,9 +24,10 @@ function Stream(options) {
 
   var that = this;
   fs.mkdir(this._playlistDir, function (err) {
-    if (err) throw err;
+    // dir may already exist
+    // if (err) throw err;
     fs.mkdir(that._tsDir, function (err) {
-      if (err) throw err;
+      // if (err) throw err;
     });
   });
 }
@@ -51,7 +55,7 @@ Stream.prototype.append = function(video, ts) {
     var tmpTranscodePlaylist = path.join(transcodeDir, 'output.m3u8');
     
     var child = exec(
-        sprintf('ffmpeg -i %s -hls_list_size 1 -hls_time 5 %s', video, tmpTranscodePlaylist),
+        sprintf('ffmpeg -i %s -hls_list_size 1 -hls_time %d %s', video, TARGET_DURATION, tmpTranscodePlaylist),
         function (error, stdout, stderr) {
           if (error) {
             throw error;
@@ -107,7 +111,7 @@ Stream.prototype._finalize = function(callback) {
   pl += '#EXT-X-MEDIA-SEQUENCE:' + this._baseSegmentId + '\n';
   var that = this;
   this._segments.forEach(function(element, index) {
-    pl += '#EXTINF:5,\n';
+    pl += '#EXTINF:' + TARGET_DURATION + '\n';
     pl += 'ts/' + path.basename(element.file) + '\n';
   });
 

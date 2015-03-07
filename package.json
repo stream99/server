@@ -33,6 +33,7 @@
     "url": "git://github.com/stream99/z.git"
   },
   "scripts": {
+    "clean": "rm -rf videos/stream1/*",
     "build": "sh build.sh",
     "build-css": "stylus -u nib css/main.styl -o static/ -c",
     "build-js": "browserify client | uglifyjs -c warnings=false -m > static/bundle.js",
